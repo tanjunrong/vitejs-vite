@@ -1,8 +1,40 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+import HelloWorld from './components/HelloWorld.vue';
+import HtmlTest from './components/HtmlTest.vue';
+import VueTest1 from './components/VueTest1.vue';
+import NotFound from './components/NotFound.vue';
+
+const routes = {
+  '/': HelloWorld,
+  '/hello-world': HtmlTest,
+  '/vue-test1': VueTest1,
+};
+export default {
+  data() {
+    return {
+      currentPath: window.location.hash,
+    };
+  },
+  computed: {
+    currentView() {
+      return routes[this.currentPath.slice(1) || '/'] || NotFound;
+    },
+  },
+  mounted() {
+    window.addEventListener('hashchange', () => {
+      this.currentPath = window.location.hash;
+    });
+  },
+};
 </script>
 
 <template>
+  <a href="#/">App</a> | <a href="#/hello-world">HelloWorld</a> |
+  <a href="#/vue-test1">VueTest1</a> |
+  <a href="#/non-existent-path">Broken Link</a>
+  <component :is="currentView" />
+
+  <p>123</p>
   <div>
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -12,6 +44,9 @@ import HelloWorld from './components/HelloWorld.vue'
     </a>
   </div>
   <HelloWorld msg="Vite + Vue" />
+  <div>
+    <!-- <HtmlTest /> -->
+  </div>
 </template>
 
 <style scoped>
